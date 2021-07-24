@@ -27,6 +27,8 @@ class NoteRepository @Inject constructor(
     private val context: Application
 ) {
 
+    fun observeNoteByID(noteID: String) = noteDao.observeNoteById(noteID)
+
     suspend fun insertNote(note: Note){
         val response = try {
             noteApi.addNote(note)
