@@ -1,12 +1,12 @@
 package com.androiddevs.ktornoteapp.repositories
 
 import android.app.Application
-import android.content.Context
 import com.androiddevs.ktornoteapp.data.local.NoteDao
 import com.androiddevs.ktornoteapp.data.local.entities.LocallyDeletedNoteID
 import com.androiddevs.ktornoteapp.data.local.entities.Note
 import com.androiddevs.ktornoteapp.data.remote.NoteApi
 import com.androiddevs.ktornoteapp.data.remote.requests.AccountRequest
+import com.androiddevs.ktornoteapp.data.remote.requests.AddOwnerRequest
 import com.androiddevs.ktornoteapp.data.remote.requests.DeleteNoteRequest
 import com.androiddevs.ktornoteapp.other.Resource
 import com.androiddevs.ktornoteapp.other.checkForInternetConnection
@@ -102,6 +102,19 @@ class NoteRepository @Inject constructor(
                 checkForInternetConnection(context)
             }
         )
+    }
+
+    suspend fun addOwnerToNote(owner: String, noteID: String) = withContext(Dispatchers.IO){
+        try {
+            val response = noteApi.addOwnerToNote(AddOwnerRequest(owner, noteID))
+            if(response.isSuccessful && response.body()!!.successful){
+                Resource.success(response.body()?.message)
+            }else{
+                Resource.error(response.body()?.message ?: response.message(), null)
+            }
+        }catch (e: Exception){
+            Resource.error("Couldnt connect to servers, check your internet connection", null)
+        }
     }
 
     suspend fun login(email: String, password: String) = withContext(Dispatchers.IO){

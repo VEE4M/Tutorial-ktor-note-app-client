@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">KtorNoteApp</string>
+    <string name="add_owner_to_this_note">Add owner to this note</string>
 </resources>
